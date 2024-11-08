@@ -5,7 +5,9 @@ The SMArtIINt Library aims to support the usage of different artificial intellig
 Currently, it supports the following tools
 1. Dymola
 2. OpenModelica
+
 with 
+
 1. TensorFlow models exported as TFLite
 2. ONNX models.
 
