@@ -20,10 +20,6 @@ public:
 
     void initializeStates(double time, double* p_stateValues, const unsigned int& nStateValues); // function to initialize states with given values
 
-    void printType() override{
-        std::string message = Utils::string_format("\nSMArtIInt: Type is %s\n", m_modelType);
-        mp_modelicaUtilityHelper->ModelicaMessage(message.c_str());
-    };
     const char* m_modelType = "TfLite";
 
     void loadAndInit(const char* tfliteModelPath);

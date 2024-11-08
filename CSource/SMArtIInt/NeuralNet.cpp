@@ -63,7 +63,7 @@ NeuralNet::NeuralNet(ModelicaUtilityHelper* p_modelicaUtilityHelper, const char*
 
 NeuralNet::~NeuralNet()
 {
-    mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor Base Neural Network\n");
+    //mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor Base Neural Network\n");
 	// clean up own arrays
 	delete mp_inputSizes;
 	mp_inputSizes = nullptr;

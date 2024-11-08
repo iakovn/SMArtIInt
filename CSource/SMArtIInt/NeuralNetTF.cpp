@@ -40,7 +40,7 @@ TfLiteNeuralNet::TfLiteNeuralNet(ModelicaUtilityHelper *p_modelicaUtilityHelper,
 }
 
 TfLiteNeuralNet::~TfLiteNeuralNet() {
-    mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor TFLite Neural Network\n");
+//    mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor TFLite Neural Network\n");
     // clean up allocated tflite stuff
     if (mp_interpreter) mp_tfdll->interpreterDelete(mp_interpreter);
     if (mp_options) mp_tfdll->interpreterOptionsDelete(mp_options);

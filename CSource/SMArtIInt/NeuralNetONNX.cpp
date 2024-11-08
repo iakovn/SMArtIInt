@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 #include "Utils.h"
 
 OnnxNeuralNet::OnnxNeuralNet(ModelicaUtilityHelper *p_modelicaUtilityHelper, const char *onnxModelPath,
@@ -23,7 +24,7 @@ OnnxNeuralNet::OnnxNeuralNet(ModelicaUtilityHelper *p_modelicaUtilityHelper, con
 }
 
 OnnxNeuralNet::~OnnxNeuralNet() {
-    mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor ONNX Neural Network\n");
+    //mp_modelicaUtilityHelper->ModelicaMessage("SMArtIInt: Destructor ONNX Neural Network\n");
     // clean up allocated onnx stuff - Correct way?
     delete(mp_session);
     delete(mp_model);
@@ -47,10 +48,8 @@ void OnnxNeuralNet::loadAndInit(const char* onnxModelPath)
     // Create the interpreter.
     mbstowcs_s(nullptr, model_path_wchar, length + 1, onnxModelPath, length);
     mp_session = new Ort::Session(*mp_model,  model_path_wchar, mp_options);
-    std::cout << "MSC" << std::endl;
 #else
     mp_session = new Ort::Session(*mp_model,  onnxModelPath, mp_options);
-    std::cout << "WSL" << std::endl;
 #endif
 
     // Allocate tensor buffers.
@@ -198,8 +197,13 @@ void OnnxNeuralNet::runInferenceFlatTensor(double time, double* input, unsigned 
 
         // Run inference
         try {
+            auto start = std::chrono::high_resolution_clock::now();
             output_tensors = mp_session->Run(Ort::RunOptions{nullptr}, input_names_char.data(), input_tensors.data(),
                                              input_names_char.size(), output_names_char.data(), output_names_char.size());
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end - start;
+//            mp_modelicaUtilityHelper->ModelicaMessage(
+//                    ("Inference time: " + std::to_string(duration.count()) + " seconds\n").c_str());
 
             result = values_to_float(output_tensors);
 

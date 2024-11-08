@@ -18,11 +18,6 @@ public:
 
 	virtual ~NeuralNet();
 
-    virtual void printType() {
-        std::string message = Utils::string_format("\nSMArtIInt: Type is %s\n", "BaseClass");
-        mp_modelicaUtilityHelper->ModelicaMessage(message.c_str());
-        }
-
 protected:
 
 	ModelicaUtilityHelper* mp_modelicaUtilityHelper; // attribute to access dymola utility functions
