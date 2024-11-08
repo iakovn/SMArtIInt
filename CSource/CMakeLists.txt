@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
-set(CMAKE_CXX_STANDARD 17)
-
 project(SMArtIInt CXX)
 message("Specified build type: ${CMAKE_BUILD_TYPE}")
 if(NOT DEFINED CMAKE_BUILD_TYPE)
@@ -40,35 +38,91 @@ set(CMAKE_CONFIGURATION_TYPES
     CACHE STRING "" FORCE
 )
 
-# set the output directory
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		# we use the CMAKE_BINARY_DIR instead of the CMAKE_CURRENT_LIST_DIR because for the deploy script we want to
-		# create the libs at a different location
-		set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux64/")
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux64/")
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux64/")
-	else ()
-		set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux32/")
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux32/")
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/linux32/")
-	endif()
-else ()
-	if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-		set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-		set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win64/")
-	elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-		set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win32/")
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win32/")
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/win32/")
-	endif()
-	
-endif ()
+################################################################################
+# Global compiler options
+################################################################################
+if(MSVC)
+    # remove default flags provided with CMake for MSVC
+    set(CMAKE_CXX_FLAGS "")
+    set(CMAKE_CXX_FLAGS_DEBUG "")
+    set(CMAKE_CXX_FLAGS_RELEASE "")
+endif()
 
+################################################################################
+# Global linker options
+################################################################################
+if(MSVC)
+    # remove default flags provided with CMake for MSVC
+    set(CMAKE_EXE_LINKER_FLAGS "")
+    set(CMAKE_MODULE_LINKER_FLAGS "")
+    set(CMAKE_SHARED_LINKER_FLAGS "")
+    set(CMAKE_STATIC_LINKER_FLAGS "")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
+endif()
+
+################################################################################
+# Nuget packages function stub.
+################################################################################
+function(use_package TARGET PACKAGE VERSION)
+    message(WARNING "No implementation of use_package. Create yours. "
+                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
+                    "for target \"${TARGET}\" is ignored!")
+endfunction()
+
+################################################################################
+# Common utils
+################################################################################
+include(CMake/Utils.cmake)
+
+################################################################################
+# Additional Global Settings(add specific info there)
+################################################################################
+include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
+
+################################################################################
+# Use solution folders feature
+################################################################################
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# Detect target platform
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    if(MSYS OR MINGW)
+        if("$ENV{MSYSTEM}" STREQUAL "UCRT64")
+            set(TARGET_SYSTEM_NAME "ucrt")
+        elseif("$ENV{MSYSTEM}" STREQUAL "MINGW64" OR "$ENV{MSYSTEM}" STREQUAL "MINGW32")
+            message(FATAL_ERROR "mingw system is not supported by onnx!")
+        else()
+            set(TARGET_SYSTEM_NAME "win")
+        endif()
+    else(MSYS OR MINGW)
+        set(TARGET_SYSTEM_NAME "win")
+    endif(MSYS OR MINGW)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  set(TARGET_SYSTEM_NAME "linux")
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+  set(TARGET_SYSTEM_NAME "darwin")
+else()
+  message(FATAL_ERROR "Unknown target system: ${CMAKE_SYSTEM_NAME}")
+endif()
+
+if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+  set(TARGET_PLATFORM "${TARGET_SYSTEM_NAME}64")
+else()
+  message(FATAL_ERROR "x86 platform is not supported by tensorflow!")
+
+endif()
+
+# set the output directory
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
 
 ################################################################################
 # Sub-projects
@@ -78,6 +132,3 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/../External/ClaRaDelay/CSource "ClaRaDelay")
-
-
-
