@@ -1,6 +1,13 @@
 ![Image](SMArtIInt_Icon.svg)
 # SMArtIInt
-The SMArtIINt Library aims to support the usage of different artificial intelligence models (AI) in Modelica simulation tools. Currently, it supports TensorFlow models exported as TFLite models within Dymola and OpenModelica. 
+The SMArtIINt Library aims to support the usage of different artificial intelligence models (AI) in Modelica simulation tools.
+
+Currently, it supports the following tools
+1. Dymola
+2. OpenModelica
+with 
+1. TensorFlow models exported as TFLite
+2. ONNX models.
 
 The repository contains a compiled version of the interface for usage in windows. __As a starting point open the Modelica Library. It contains some ready to run examples (SMartIInt.Tester) which demonstrate the usage.__ The corresponding python files which create the TF-Lite models are located in Resources\ExampleNeuralNets.
 
