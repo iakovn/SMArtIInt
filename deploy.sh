@@ -21,14 +21,18 @@ sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/package.mo
 
 #clean up
 rm ./_deploy/SMArtIInt/Resources/Library/win64/*
-rm ./_deploy/SMArtIInt/Resources/Library/win64/*
+rm ./_deploy/SMArtIInt/Resources/Library/linux64/*
 
-# Windows build
-#cmake -S ./CSource -B ./_deploy/_cmake/ -G "MinGW Makefiles"
+# Windows build vsc
 cmake -S ./CSource -B ./_deploy/_cmake/ -DCMAKE_BUILD_TYPE=Release
 cd ./_deploy/_cmake
 cmake --build . --config Release
 cd ../../
+
+# Windows build mingw
+# cmake -S ./CSource -B ./_deploy/_cmake_gcc/ -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+# cd ./_deploy/_cmake_gcc
+# cd ../../
 
 # Linux build
 wsl cmake -S ./CSource -B ./_deploy/_cmake_wsl/ -DCMAKE_BUILD_TYPE=Release
@@ -38,7 +42,9 @@ cd ../../
 
 # copy additional required libs
 cp ./SMArtIInt/Resources/Library/win64/tensorflowlite_c.dll ./_deploy/SMArtIInt/Resources/Library/win64/
+cp ./SMArtIInt/Resources/Library/win64/onnxruntime_c.dll ./_deploy/SMArtIInt/Resources/Library/win64/
 cp ./SMArtIInt/Resources/Library/linux64/libtensorflowlite_c.so ./_deploy/SMArtIInt/Resources/Library/linux64/
+cp ./SMArtIInt/Resources/Library/linux64/libonnxruntime_c.so ./_deploy/SMArtIInt/Resources/Library/linux64/
 
 # pack everything
 cp ./README.md ./_deploy/
