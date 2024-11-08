@@ -19,9 +19,9 @@ sed -i -e "s/%build%/$build/g" ./_deploy/SMArtIInt/package.mo
 sed -i -e "s/%version%/$version/g" ./_deploy/SMArtIInt/package.mo
 sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/package.mo
 
-sed -i -e "s/%build%/$build/g" ./_deploy/SMArtIInt/libraryinfo.mo
-sed -i -e "s/%version%/$version/g" ./_deploy/SMArtIInt/libraryinfo.mo
-sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/libraryinfo.mo
+sed -i -e "s/%build%/$build/g" ./_deploy/SMArtIInt/libraryinfo.mos
+sed -i -e "s/%version%/$version/g" ./_deploy/SMArtIInt/libraryinfo.mos
+sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/libraryinfo.mos
 
 #clean up
 rm ./_deploy/SMArtIInt/Resources/Library/win64/*
