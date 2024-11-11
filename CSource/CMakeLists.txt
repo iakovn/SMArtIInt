@@ -4,7 +4,7 @@ set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 set(CMAKE_CXX_STANDARD 17)
 
-project(SMArtIInt CXX)
+project(SMArtInt CXX)
 message("Specified build type: ${CMAKE_BUILD_TYPE}")
 if(NOT DEFINED CMAKE_BUILD_TYPE)
 	message("Build type not specified - use release mode")
@@ -69,22 +69,22 @@ else()
 endif()
 
 # set the output directory - we all the targets point to the same location; only setting the non specialized directory does not work
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtIInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/../SMArtInt/Resources/Library/${TARGET_PLATFORM}/")
 
 
 ################################################################################
 # Sub-projects
 ################################################################################
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-	add_subdirectory(${PROJECT_SOURCE_DIR}/SMArtIInt)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/SMArtInt)
 endif()
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/../External/ClaRaDelay/CSource "ClaRaDelay")

@@ -5,21 +5,21 @@ CMakeSettings.json
 CSource/cmake-build*
 CSource/out/*
 
-SMArtIInt/Resources/Library/win64/*
-!SMArtIInt/Resources/Library/win64/Delay-V1.lib
-!SMArtIInt/Resources/Library/win64/SMArtIInt.dll
-!SMArtIInt/Resources/Library/win64/tensorflowlite_c.dll
-!SMArtIInt/Resources/Library/win64/onnxruntime_c.dll
+SMArtInt/Resources/Library/win64/*
+!SMArtInt/Resources/Library/win64/Delay-V1.lib
+!SMArtInt/Resources/Library/win64/SMArtInt.dll
+!SMArtInt/Resources/Library/win64/tensorflowlite_c.dll
+!SMArtInt/Resources/Library/win64/onnxruntime_c.dll
 
 CSource/build*/
 
-SMArtIInt/Resources/ExampleNeuralNets/NNHeatTransfer/ht_log
-SMArtIInt/Resources/ExampleNeuralNets/NNHeatTransfer/large*
-SMArtIInt/Resources/ExampleNeuralNets/NNHeatTransfer/small*
-SMArtIInt/Resources/ExampleNeuralNets/NNHeatTransfer/*.pckl
-SMArtIInt/Resources/ExampleNeuralNets/NNHeatTransfer/savedmodel*
+SMArtInt/Resources/ExampleNeuralNets/NNHeatTransfer/ht_log
+SMArtInt/Resources/ExampleNeuralNets/NNHeatTransfer/large*
+SMArtInt/Resources/ExampleNeuralNets/NNHeatTransfer/small*
+SMArtInt/Resources/ExampleNeuralNets/NNHeatTransfer/*.pckl
+SMArtInt/Resources/ExampleNeuralNets/NNHeatTransfer/savedmodel*
 
-SMArtIInt/Resources/ExampleNeuralNets/PIController/savedmodel*
+SMArtInt/Resources/ExampleNeuralNets/PIController/savedmodel*
 
 _dymWork/*
 _deploy/*

@@ -12,20 +12,20 @@ rm -r _deploy/
 mkdir _deploy/
 
 # in case we run on a windows machine we do not have rsync - therefore use find in combination with mkdir and cp to copy the required files
-find ./SMArtIInt/* -type d ! \( -path "*venv*" -or -path "*idea*" -or -path *_log* -or -name data_*.pckl \)  -exec mkdir -p ./_deploy/{} \;
-find ./SMArtIInt/* -type f ! \( -path "*venv*" -or -path "*idea*" -or -path *_log* -or -name data_*.pckl \)  -exec cp {} ./_deploy/{} \;
+find ./SMArtInt/* -type d ! \( -path "*venv*" -or -path "*idea*" -or -path *_log* -or -name data_*.pckl \)  -exec mkdir -p ./_deploy/{} \;
+find ./SMArtInt/* -type f ! \( -path "*venv*" -or -path "*idea*" -or -path *_log* -or -name data_*.pckl \)  -exec cp {} ./_deploy/{} \;
 
-sed -i -e "s/%build%/$build/g" ./_deploy/SMArtIInt/package.mo
-sed -i -e "s/%version%/$version/g" ./_deploy/SMArtIInt/package.mo
-sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/package.mo
+sed -i -e "s/%build%/$build/g" ./_deploy/SMArtInt/package.mo
+sed -i -e "s/%version%/$version/g" ./_deploy/SMArtInt/package.mo
+sed -i -e "s/%date%/$date/g" ./_deploy/SMArtInt/package.mo
 
-sed -i -e "s/%build%/$build/g" ./_deploy/SMArtIInt/libraryinfo.mos
-sed -i -e "s/%version%/$version/g" ./_deploy/SMArtIInt/libraryinfo.mos
-sed -i -e "s/%date%/$date/g" ./_deploy/SMArtIInt/libraryinfo.mos
+sed -i -e "s/%build%/$build/g" ./_deploy/SMArtInt/libraryinfo.mos
+sed -i -e "s/%version%/$version/g" ./_deploy/SMArtInt/libraryinfo.mos
+sed -i -e "s/%date%/$date/g" ./_deploy/SMArtInt/libraryinfo.mos
 
 #clean up
-rm ./_deploy/SMArtIInt/Resources/Library/win64/*
-rm ./_deploy/SMArtIInt/Resources/Library/linux64/*
+rm ./_deploy/SMArtInt/Resources/Library/win64/*
+rm ./_deploy/SMArtInt/Resources/Library/linux64/*
 
 # Windows build vsc
 cmake -S ./CSource -B ./_deploy/_cmake/ -DCMAKE_BUILD_TYPE=Release
@@ -45,18 +45,18 @@ wsl cmake --build . --config Release
 cd ../../
 
 # copy additional required libs
-cp ./SMArtIInt/Resources/Library/win64/tensorflowlite_c.dll ./_deploy/SMArtIInt/Resources/Library/win64/
-cp ./SMArtIInt/Resources/Library/win64/onnxruntime_c.dll ./_deploy/SMArtIInt/Resources/Library/win64/
-cp ./SMArtIInt/Resources/Library/linux64/libtensorflowlite_c.so ./_deploy/SMArtIInt/Resources/Library/linux64/
-cp ./SMArtIInt/Resources/Library/linux64/libonnxruntime_c.so ./_deploy/SMArtIInt/Resources/Library/linux64/
+cp ./SMArtInt/Resources/Library/win64/tensorflowlite_c.dll ./_deploy/SMArtInt/Resources/Library/win64/
+cp ./SMArtInt/Resources/Library/win64/onnxruntime_c.dll ./_deploy/SMArtInt/Resources/Library/win64/
+cp ./SMArtInt/Resources/Library/linux64/libtensorflowlite_c.so ./_deploy/SMArtInt/Resources/Library/linux64/
+cp ./SMArtInt/Resources/Library/linux64/libonnxruntime_c.so ./_deploy/SMArtInt/Resources/Library/linux64/
 
 # pack everything
 cp ./README.md ./_deploy/
 cp LICENSE ./_deploy/
 cd _deploy/
 # clean the zip file first
-zip -d ../SMArtIInt_$version"_"$build.zip
-zip -r ../SMArtIInt_$version"_"$build.zip ./SMArtIInt README.md LICENSE
+zip -d ../SMArtInt_$version"_"$build.zip
+zip -r ../SMArtInt_$version"_"$build.zip ./SMArtInt README.md LICENSE
 
 echo "Press any key to continue..."
 # -s: Do not echo input coming from a terminal
