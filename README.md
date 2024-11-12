@@ -11,7 +11,7 @@ with
 1. TensorFlow models exported as TFLite
 2. ONNX models.
 
-The repository contains a compiled version of the interface for usage in windows. __As a starting point open the Modelica Library. It contains some ready to run examples (SMartIInt.Tester) which demonstrate the usage.__ The corresponding python files which create the TF-Lite models are located in Resources\ExampleNeuralNets.
+The repository contains a compiled version of the interface for usage in windows. __As a starting point open the Modelica Library. It contains some ready to run examples (SMartInt.Tester) which demonstrate the usage.__ The corresponding python files which create the TF-Lite and ONNX models are located in Resources\ExampleNeuralNets.
 
 Hints for usage in Dymola:
 Currently, only a 64-bit version is available. If the variable Advanced.CompileWith64 is set on its default value 0, Dymola will automatically compile a 64-bit Dymosim.exe after giving a remark in the translate log file. In case Advanced.CompileWith64=2 a 64-bit dymosim.exe is created anyway and in case of Advanced.CompileWith64=1 compilation will fail.
