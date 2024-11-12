@@ -1,4 +1,4 @@
-![Image](SMArtInt_Icon.svg)
+![Image](SMArtInt\Resources\Images\SMArtInt-library.jpg)
 # SMArtInt Library
 The **SMArtInt Library** is designed to integrate various artificial intelligence (AI) models seamlessly into Modelica-based simulation tools. **SMArtInt**, short for **S**imple **M**odelica **Art**ificial **I**ntelligence I**nt**erface, provides a user-friendly interface that bridges advanced AI capabilities with the power of Modelica simulations, enhancing both modeling efficiency and simulation accuracy.
 
