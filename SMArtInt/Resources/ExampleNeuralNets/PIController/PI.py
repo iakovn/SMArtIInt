@@ -1,17 +1,37 @@
 # -*- coding: utf-8 -*-
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#   kernelspec:
+#     name: dev
+#     display_name: Python (dev)
+#     language: python
+# ---
+#
+# %%
 import os
-import numpy as np
-import matplotlib.pylab as plt
-import tensorflow as tf
+import sys
 from enum import Enum
 
+import matplotlib.pylab as plt
+import numpy as np
+import tensorflow as tf
+
+
+# %%
 class RnnType(Enum):
     """available types of RNN"""
+
     RNN = 0
     EXTSTATE = 1
     STATE = 2
 
 
+# %%
 def generateAiPi(rnnType: RnnType, window_size=1, k=30, T=1600, tau=100):
     stateful = rnnType == RnnType.STATE
 
@@ -22,22 +42,24 @@ def generateAiPi(rnnType: RnnType, window_size=1, k=30, T=1600, tau=100):
     else:
         modelInput = tf.keras.Input(shape=(window_size, 1), name="FeatureInput")
 
-    layer = tf.keras.layers.SimpleRNN(units=2,
-                                      activation='linear',
-                                      use_bias=False,
-                                      stateful=stateful,
-                                      return_state=True,
-                                      name="ZPassAndIntegrate",
-                                      )
+    layer = tf.keras.layers.SimpleRNN(
+        units=2,
+        activation="linear",
+        use_bias=False,
+        stateful=stateful,
+        return_state=True,
+        name="ZPassAndIntegrate",
+    )
     state_input = tf.keras.Input(shape=(2,))
     if rnnType == RnnType.EXTSTATE:
         out, state = layer(modelInput, initial_state=[state_input])
     else:
-        out, state = layer(modelInput, )
-    out = tf.keras.layers.Dense(units=1,
-                                activation='linear',
-                                use_bias=False,
-                                name="Weight")(out)
+        out, state = layer(
+            modelInput,
+        )
+    out = tf.keras.layers.Dense(
+        units=1, activation="linear", use_bias=False, name="Weight"
+    )(out)
     if rnnType == RnnType.EXTSTATE:
         model = tf.keras.Model([modelInput, state_input], [out, state])
     else:
@@ -46,14 +68,11 @@ def generateAiPi(rnnType: RnnType, window_size=1, k=30, T=1600, tau=100):
 
     # manipulate weights to mimic PI controller
     model.layers[-1].set_weights([np.array([[k / T * tau], [k]])])
-    model.layers[-2].set_weights([
-        np.array([[0, 1]]),
-        np.array([[1, 0],
-                  [1, 0]])
-    ])
+    model.layers[-2].set_weights([np.array([[0, 1]]), np.array([[1, 0], [1, 0]])])
     return model
 
 
+# %%
 def step(height=1.0, duration=3600, start=500, tau=100, window_size=500):
     times = np.arange(0, duration, tau)
     step_data = np.zeros_like(times)
@@ -62,11 +81,12 @@ def step(height=1.0, duration=3600, start=500, tau=100, window_size=500):
     for i in range(len(step_data)):
         start_idx = max(0, i - window_size + 1)
         n_elements = i - start_idx + 1
-        unrld_data[i, -n_elements:, 0] = step_data[start_idx: i + 1]
+        unrld_data[i, -n_elements:, 0] = step_data[start_idx : i + 1]
 
     return times, step_data, unrld_data
 
 
+# %%
 ### ----------------------Settings for the PI ----------------------
 k = 30  # proportional gain
 T = 1600  # integrator time constant
@@ -78,14 +98,15 @@ else:
     tau = 10
 testTFLiteModel = False
 ### Test data
-test_model = False
+test_model = True
 stepTime = 100
 
 # create model and test data
 model = generateAiPi(rnn_type, window_size=window_size, k=k, T=T, tau=tau)
-times, step_data, unrld_data = step(height=1, duration=3600, start=500,
-                                    tau=tau, window_size=window_size)
-
+times, step_data, unrld_data = step(
+    height=1, duration=3600, start=500, tau=tau, window_size=window_size
+)
+# %%
 # test model
 if test_model:
     if rnn_type == RnnType.RNN:
@@ -103,13 +124,13 @@ if test_model:
             results.append(temp[0].flatten())
 
     fig = plt.Figure()
-    plt.title('Step Answer of TF Model')
-    plt.xlabel('Time in sec')
-    plt.ylabel('Model Output')
+    plt.title("Step Answer of TF Model")
+    plt.xlabel("Time in sec")
+    plt.ylabel("Model Output")
     plt.ylim([0, 100])
     plt.plot(times, results)
     plt.show()
-
+# %%
 ### --------- Export To TFLite ------------------------------
 if rnn_type != RnnType.STATE:
     # export the model as tflite model
@@ -117,20 +138,20 @@ if rnn_type != RnnType.STATE:
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
     converter.experimental_new_converter = True
-    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS,
-                                           tf.lite.OpsSet.SELECT_TF_OPS]
+    converter.target_spec.supported_ops = [
+        tf.lite.OpsSet.TFLITE_BUILTINS,
+        tf.lite.OpsSet.SELECT_TF_OPS,
+    ]
     tflite_model = converter.convert()
     if rnn_type == RnnType.EXTSTATE:
-        path = os.path.join('.', "PI_stateful.tflite")
+        path = os.path.join(".", "PI_stateful.tflite")
     else:
-        path = os.path.join('.', "PI.tflite")
-    with open(path, 'wb') as f:
+        path = os.path.join(".", "PI.tflite")
+    with open(path, "wb") as f:
         f.write(tflite_model)
 
     if testTFLiteModel:
-
-        interpreter = tf.lite.Interpreter(
-            model_path=path)
+        interpreter = tf.lite.Interpreter(model_path=path)
         interpreter.allocate_tensors()
         input_details = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
@@ -141,38 +162,42 @@ if rnn_type != RnnType.STATE:
         for i, data_point in enumerate(step_data):
             if rnn_type == RnnType.EXTSTATE:
                 np_features = np.array([[[data_point]]])
-                np_features = np_features.astype(input_details[0]['dtype'])
-                interpreter.set_tensor(input_details[0]['index'], np_features)
-                states = states.astype(input_details[1]['dtype'])
-                interpreter.set_tensor(input_details[1]['index'], states)
+                np_features = np_features.astype(input_details[0]["dtype"])
+                interpreter.set_tensor(input_details[0]["index"], np_features)
+                states = states.astype(input_details[1]["dtype"])
+                interpreter.set_tensor(input_details[1]["index"], states)
                 interpreter.invoke()
-                results.append(interpreter.get_tensor(
-                    output_details[0]['index'])[0][0])
-                states = interpreter.get_tensor(output_details[1]['index'])
+                results.append(interpreter.get_tensor(output_details[0]["index"])[0][0])
+                states = interpreter.get_tensor(output_details[1]["index"])
             else:
                 np_features = np.array([unrld_data[i, :, :]])
-                np_features = np_features.astype(input_details[0]['dtype'])
-                interpreter.set_tensor(input_details[0]['index'], np_features)
+                np_features = np_features.astype(input_details[0]["dtype"])
+                interpreter.set_tensor(input_details[0]["index"], np_features)
                 interpreter.invoke()
-                results.append(interpreter.get_tensor(
-                    output_details[0]['index'])[0][0])
+                results.append(interpreter.get_tensor(output_details[0]["index"])[0][0])
 
         fig = plt.Figure()
-        plt.title('Step Answer of TFLite Model')
-        plt.xlabel('Time in sec')
-        plt.ylabel('Model Output')
+        plt.title("Step Answer of TFLite Model")
+        plt.xlabel("Time in sec")
+        plt.ylabel("Model Output")
         plt.ylim([0, 100])
         plt.plot(times, results)
         plt.show()
 else:
     print("Stateful model cannot be exported as TFLite model!")
-
+# %%
 ### --------- Export To ONNX ------------------------------
+# Need to go via saved model to avoid keras compatibility issues in tf2onnx
 model.summary()
-model.save("savedmodel")
-model.save("savedmodel.h5")
+
+tf.saved_model.save(model, "savedmodel")
+
 if rnn_type == RnnType.EXTSTATE:
-    os.system("python -m tf2onnx.convert --saved-model savedmodel --output PI_stateful.onnx --opset 13")
-              #"--inputs FeatureInput:0,input_1:0 --outputs Weight:0,PassAndIntegrate:0")
+    os.system(
+        f"{sys.executable} -m tf2onnx.convert --saved-model savedmodel --output PI_stateful.onnx --opset 13"
+    )
+# "--inputs FeatureInput:0,input_1:0 --outputs Weight:0,PassAndIntegrate:0")
 elif rnn_type == RnnType.RNN:
-    os.system("python -m tf2onnx.convert --saved-model savedmodel --output PI.onnx --opset 13")
+    os.system(
+        f"{sys.executable} -m tf2onnx.convert --saved-model savedmodel --output PI.onnx --opset 13"
+    )
