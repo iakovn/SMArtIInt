@@ -8,7 +8,7 @@ dependencies:
   - pytorch
   - jupyter
   - matplotlib
-  - numpy
+  - numpy <2.0
   - psutil
   - pyDOE2
   - plotly
@@ -17,3 +17,4 @@ dependencies:
   - pip
   - pip:
     - OMPython==3.6.0
+    - ruff

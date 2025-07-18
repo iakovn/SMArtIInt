@@ -27,3 +27,44 @@ SMArtInt uses other software - the source code is included as submodule and/or a
 * License: https://github.com/microsoft/onnxruntime/blob/main/LICENSE
 
 This work was carried out within the framework of the research project DIZPROVI, supported by the Federal Ministry of Education and Research (number 03WIR0105E).
+
+## Devcontainer
+
+This project includes a pre-configured Visual Studio Code Devcontainer, which provides a consistent and reproducible development environment for all Python-related tasks.
+
+### Working with the Devcontainer
+
+To use the devcontainer, you need to have [Docker](https://www.docker.com/products/docker-desktop/) and the [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) installed.
+
+Once installed, open the project folder in VS Code. You will be prompted to "Reopen in Container". This will build the Docker image and connect your VS Code instance to the environment, giving you access to a terminal and all tools directly within the container.
+
+The environment comes with Python, Jupyter, OMPython, and all other necessary libraries pre-installed, allowing you to run the simulation notebooks and other Python scripts without any local setup.
+
+### Managing Dependencies and Relocking
+
+The Python dependencies for the devcontainer are managed by Conda and pip, with versions pinned in lock files for reproducibility.
+
+*   **Conda:** `.devcontainer/linux_64.env.lock`
+*   **Pip:** `.devcontainer/requirements.linux64.txt`
+
+If you need to add or update a dependency, you should first modify the source file (`.devcontainer/environment.yml`) and then regenerate the lock files.
+
+**Workflow for updating dependencies:**
+
+1.  Modify `.devcontainer/environment.yml` with your desired changes.
+2.  From the terminal *inside the running devcontainer* create a new environment:
+    ```bash
+    micromamba create -n upgrade -f .devcontainer/environment.yml
+    ```
+3.  Execute the following commands to regenerate the lock files:
+    ```bash
+    # For conda packages
+    micromamba env export --explicit -n upgrade > .devcontainer/linux_64.env.lock 
+
+    # For pip packages (if any were added to environment.yml)
+    micromamba activate upgrade
+    pip freeze| grep -v file > .devcontainer/requirements.linux64.txt
+    ```
+4.  Rebuild container to ensure new environment is functional.
+5.  Commit the updated `environment.yml` along with the newly generated lock files to version control.
+

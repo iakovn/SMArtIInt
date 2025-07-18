@@ -1,0 +1,19 @@
+{
+    // These settings are specific to this project and will be applied
+    // when you open it in the devcontainer.
+    "[python]": {
+        // Set Ruff as the default formatter for Python files.
+        // This allows you to format the file on demand (e.g., with Shift+Alt+F).
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        
+        // Enable "fix all" and "organize imports" actions on save.
+        // This is the magic that cleans up your code automatically.
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        }
+    },
+    // General editor setting to format the document on save.
+    // This works with the defaultFormatter set above.
+    "editor.formatOnSave": true
+}
