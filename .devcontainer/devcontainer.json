@@ -1,0 +1,26 @@
+{
+	"name": "OpenModelica Devcontainer",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"forwardPorts": [8888],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter"
+			],
+            "settings": {
+                "python.defaultInterpreterPath": "/opt/conda/envs/dev/bin/python",
+				"jupyter.kernels.excludePythonEnvironments": [
+					"/opt/conda/bin/python",
+    			    "/bin/python3",
+        			"/usr/bin/python3"
+				]
+            }
+		}
+	},
+    "remoteUser": "vscode",
+    "workspaceFolder": "/home/vscode/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/workspace,type=bind,consistency=cached"
+}

@@ -1,0 +1,20 @@
+name: smartiint-dev
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pyfmi
+  - tensorflow-cpu
+  - pytorch
+  - jupyter
+  - matplotlib
+  - numpy <2.0
+  - psutil
+  - pyDOE2
+  - plotly
+  - tensorflow >=2.12.0,<3.0
+  - tf2onnx
+  - pip
+  - pip:
+    - OMPython==3.6.0
+    - ruff

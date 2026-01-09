@@ -25,3 +25,7 @@ _dymWork/*
 _deploy/*
 _cmake*
 cmake_*
+# Generated simulation files
+generated/
+# Jupyter Notebook checkpoints
+**/.ipynb_checkpoints/**
